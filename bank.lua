@@ -63,7 +63,7 @@ function Bank.DemoLead (t)
 end
 
 local function DrumDecay_process (t, v)
-    return v * (1 - math.min(t.data.time * t.speed, 1)) * t.data.n * 0.1
+    return v * (1 - math.min(t.data.onTime * t.speed, 1)) * t.data.n * 0.1
 end
 
 local function DrumDecay (t)
