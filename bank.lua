@@ -50,15 +50,18 @@ local function DemoLeadEffect (data, context)
         .. Qd.Tube { count = 3 }
 end
 
+local function automateDemoLead (dt, args)
+    local lfo = args.lfo()
+    args.fold.limit = 0.1 * (1 + lfo)
+    args.fold.factor = 0.5 + 0.3 * (1 + lfo) 
+end
+    
 function Bank.DemoLead (t)
     assert(t.clock, 'DemoLead args table requires "clock" field')
     assert(t.beat, 'DemoLead args table requires "beat" field')
     local fold = Qd.Fold()
     local lfo = t.clock .. Qd.Osc { freq = t.beat * 4 } .. Qd.Sin()
-    t.clock:always(function (dt)
-        fold.limit = 0.1 * (1 + lfo())
-        fold.factor = 0.5 + 0.3 * (1 + lfo()) 
-    end)
+    t.clock:always(automateDemoLead, { fold = fold, lfo = lfo })
     return Qd.Axe { effect = DemoLeadEffect, context = { fold = fold } }
 end
 
